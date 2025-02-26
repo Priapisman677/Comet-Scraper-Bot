@@ -1,0 +1,6 @@
+{
+    "watch": ["src"],
+    "ext": "ts",
+    "exec": "env-cmd -f ./config/dev.env npx tsx src/index.ts"
+  }
+  

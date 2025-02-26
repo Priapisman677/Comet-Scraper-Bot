@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String
+  email     String
+  password  String // Hashed password stored for user authentication.
+  salt      String // A unique salt value used for hashing the password to enhance security.
+  createdAt DateTime @default(now())
+
+  // A user can track multiple products over time.
+  // This allows tracking price history for different products.
+  Tracked_product Tracked_products[]
+
+  // Each user can optionally link their account to a Telegram user for alerts.
+  telegram_user Telegram_User?
+
+  @@map("user")
+}
+
+model Product_details {
+  id           Int      @id @default(autoincrement())
+  url          String
+  title        String
+  createdAt    DateTime @default(now())
+  currentPrice Int
+
+  // A product can be tracked multiple times by different users.
+  // Each tracked instance captures price changes over time.
+  Tracked_product Tracked_products[]
+
+  @@map("product_details")
+}
+
+model Tracked_products {
+  id       Int  @id @default(autoincrement())
+  newPrice Int
+  oldPrice Int?
+
+  // Foreign key reference to the product details.
+  // This allows multiple users to track the same product independently.
+  productDetailsId Int
+  details          Product_details @relation(fields: [productDetailsId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  // Foreign key reference to the user tracking this product.
+  // This enables a user to track multiple instances of the same product, 
+  // helping in building a price history over time.
+  trackedBy Int
+  user      User @relation(fields: [trackedBy], references: [id], onDelete: Cascade)
+
+  @@map("tracked_products")
+}
+
+model Telegram_User {
+  telegramId   BigInt @unique
+  email        String
+  storedUserId Int    @unique
+
+  // Each Telegram user must be linked to exactly one User.
+  // This ensures that price alerts are associated with a registered user.
+  user User @relation(fields: [storedUserId], references: [id], onDelete: Cascade)
+
+  token       String   @unique
+  priceAlerts Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  @@map("telegram_user")
+}

@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+	  "strict": true,
+	  "noUnusedLocals": true,
+	  "noUnusedParameters": true,
+	  "noFallthroughCasesInSwitch": true,
+	  "noUncheckedSideEffectImports": true,
+	  "sourceMap": true,
+	  "target": "es2022",
+	  "module": "NodeNext",
+	  "outDir": "./dist",
+	  "esModuleInterop": true,
+	},
+	"exclude": ["node_modules", "vitest.config.ts", "tests"],
+	"include": ["src", "e2e"]
+  }
+  

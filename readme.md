@@ -5,10 +5,15 @@
 This repository contains a web scraper built with Playwright and a backend API. Below are the instructions for running tests and understanding the environment variable setup.
 
 ## Tech Stack
+
 Backend: Node.js (TypeScript)
+
 Web Scraping: Playwright
+
 Database: PostgreSQL (via Prisma ORM)
+
 Testing: Vitest + Playwright
+
 Environment Management: dotenv-cli
 
 
